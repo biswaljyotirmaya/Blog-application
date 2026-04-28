@@ -1,0 +1,13 @@
+<div th:fragment="alertBox">
+    <div id="alertBox"
+         th:if="${success != null}"
+         class="alert-success"
+         th:text="${success}">
+    </div>
+
+    <div id="alertBox"
+         th:if="${error != null}"
+         class="alert-error"
+         th:text="${error}">
+    </div>
+</div>

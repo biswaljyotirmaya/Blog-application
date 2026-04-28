@@ -1,0 +1,72 @@
+body {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    min-height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-card {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 16px;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.btn-purple {
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.btn-purple:hover {
+    opacity: 0.9;
+}
+
+.card {
+    border-radius: 12px;
+}
+
+#alertBox {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+
+    z-index: 9999;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+
+    animation: slideDown 0.4s ease;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #28a745, #5cd65c);
+}
+
+.alert-error {
+    background: linear-gradient(135deg, #dc3545, #ff6b6b);
+}
+
+@keyframes slideDown {
+    from {
+        transform: translate(-50%, -20px);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
