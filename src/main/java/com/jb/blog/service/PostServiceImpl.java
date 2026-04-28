@@ -5,7 +5,7 @@ import com.jb.blog.entity.Post;
 import com.jb.blog.entity.User;
 import com.jb.blog.repo.IPostsRepo;
 import com.jb.blog.repo.IUsersRepo;
-import lombok.Setter;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,24 +19,45 @@ public class PostServiceImpl implements IPostService {
     @Autowired
     private IPostsRepo postsRepo;
 
+    @Autowired
+    private IUsersRepo usersRepo;
+
+    @Autowired
+    private HttpSession httpSession;
+
     @Override
-    public String addPost(PostData post) {
-        return "";
+    public String addPost(PostData postData) {
+        User user = (User) httpSession.getAttribute("loggedInUser");
+
+        if (user == null) {
+            return "ERROR: User not logged in";
+        }
+
+        Post post = new Post();
+        BeanUtils.copyProperties(postData, post);
+        post.setUser(user);
+        postsRepo.save(post);
+
+        return "SUCCESS: Blog created successfully";
     }
 
     @Override
     public List<PostData> findAllPost() {
         List<Post> list = postsRepo.findAll();
+
         if (list.isEmpty()) {
             return null;
         }
-        List<PostData> list1 = new ArrayList<>();
+
+        List<PostData> result = new ArrayList<>();
         for (Post post : list) {
             PostData postData = new PostData();
             BeanUtils.copyProperties(post, postData);
-            list1.add(postData);
+            postData.setAuthorName(post.getUser().getFirstName());
+            result.add(postData);
         }
-        return list1;
+
+        return result;
     }
 
     @Override
@@ -52,5 +73,59 @@ public class PostServiceImpl implements IPostService {
     @Override
     public String deleteAllPost() {
         return "";
+    }
+
+    @Override
+    public List<PostData> findAllPostByUser(Long id) {
+        User user = usersRepo.findUserById(id);
+
+        if (user == null) {
+            return null;
+        }
+
+        List<PostData> result = new ArrayList<>();
+        List<Post> posts = user.getPost();
+
+        for (Post post : posts) {
+            PostData postData = new PostData();
+            BeanUtils.copyProperties(post, postData);
+            result.add(postData);
+        }
+
+        return result;
+    }
+
+    @Override
+    public void updatePost(PostData data, User user) {
+        Post post = postsRepo.findById(data.getId()).orElse(null);
+
+        if (post == null) {
+            return;
+        }
+
+        if (!post.getUser().getId().equals(user.getId())) {
+            return;
+        }
+
+        post.setTitle(data.getTitle());
+        post.setDescription(data.getDescription());
+        post.setContent(data.getContent());
+        postsRepo.save(post);
+    }
+
+    @Override
+    public boolean deletePost(Long id, User user) {
+        Post post = postsRepo.findById(id).orElse(null);
+
+        if (post == null) {
+            return false;
+        }
+
+        if (!post.getUser().getId().equals(user.getId())) {
+            return false;
+        }
+
+        postsRepo.delete(post);
+        return true;
     }
 }

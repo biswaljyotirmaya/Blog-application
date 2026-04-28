@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::body})}">
+
+<body>
+
+<main class="page-shell page-narrow">
+    <section class="glass-panel dashboard-panel fade-up">
+        <div class="dashboard-toolbar">
+            <div class="dashboard-header">
+                <p class="hero-kicker">Author Dashboard</p>
+                <h1 class="dashboard-title">Manage your posts</h1>
+                <p class="dashboard-copy">
+                    Review everything you have written, jump back into editing, or create something new.
+                </p>
+            </div>
+
+            <a th:href="@{/post/new}" class="btn-brand">
+                <i class="bi bi-plus-lg"></i>
+                Create Post
+            </a>
+        </div>
+
+        <div th:if="${posts != null and !#lists.isEmpty(posts)}">
+            <table class="dashboard-table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Created On</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="post, stat : ${posts}">
+                    <td th:text="${stat.count}"></td>
+                    <td>
+                        <div class="table-title" th:text="${post.title}"></div>
+                    </td>
+                    <td>
+                        <div class="table-description" th:text="${post.description}"></div>
+                    </td>
+                    <td th:text="${#temporals.format(post.createdDate, 'dd MMM yyyy')}"></td>
+                    <td>
+                        <div class="table-actions">
+                            <a th:href="@{/post/edit/{id}(id=${post.id})}" class="btn-soft">Edit</a>
+                            <form th:action="@{/post/delete/{id}(id=${post.id})}" method="post">
+                                <button type="submit"
+                                        class="btn-danger-soft"
+                                        onclick="return confirm('Are you sure you want to delete this blog?')">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div th:if="${posts == null or #lists.isEmpty(posts)}" class="empty-state">
+            <h2 class="section-title">Nothing published yet</h2>
+            <p class="section-copy mx-auto">
+                Start with your first post and it will appear here for future editing and management.
+            </p>
+            <a th:href="@{/post/new}" class="btn-brand mt-3">Create Your First Post</a>
+        </div>
+    </section>
+</main>
+
+</body>
+</html>

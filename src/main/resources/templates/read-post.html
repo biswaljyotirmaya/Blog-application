@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::body})}">
+
+<body>
+
+<main class="page-shell page-narrow">
+    <section class="post-layout">
+        <article class="glass-panel post-main fade-up">
+            <div class="post-header">
+                <p class="hero-kicker">Article</p>
+                <h1 class="post-title" th:text="${post.title}"></h1>
+                <p class="post-subtitle">
+                    Written by <strong th:text="${post.user.firstName}"></strong>
+                </p>
+            </div>
+
+            <div class="post-body" th:utext="${post.content}"></div>
+        </article>
+
+        <aside class="info-stack fade-up delay-1">
+            <section class="glass-panel post-side">
+                <h2 class="section-title mb-3">Comments</h2>
+
+                <div th:if="${#lists.isEmpty(comments)}" class="form-note">
+                    No comments yet. Be the first to respond.
+                </div>
+
+                <div th:if="${!#lists.isEmpty(comments)}" class="comment-list">
+                    <article class="comment-card" th:each="c : ${comments}">
+                        <div class="d-flex justify-content-between align-items-start gap-2">
+                            <strong class="comment-card__name" th:text="${c.name}"></strong>
+                            <span class="comment-card__time"
+                                  th:text="${#temporals.format(c.createdDate, 'dd MMM yyyy HH:mm')}"></span>
+                        </div>
+                        <p class="comment-card__body" th:text="${c.content}"></p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="glass-panel post-side">
+                <h2 class="section-title mb-3">Leave a Comment</h2>
+
+                <form th:action="@{/post/comment}" th:object="${commentData}" method="post">
+                    <input type="hidden" name="postId" th:value="${post.id}">
+
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text"
+                               th:field="*{name}"
+                               class="form-control"
+                               placeholder="Your name"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email"
+                               th:field="*{email}"
+                               class="form-control"
+                               placeholder="Your email"
+                               required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Comment</label>
+                        <textarea th:field="*{content}"
+                                  class="form-control"
+                                  rows="4"
+                                  placeholder="Write your comment..."
+                                  required></textarea>
+                    </div>
+
+                    <button class="btn-purple">Post Comment</button>
+                </form>
+            </section>
+        </aside>
+    </section>
+</main>
+
+</body>
+</html>

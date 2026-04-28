@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::body})}">
+
+<body>
+
+<main class="page-shell page-narrow">
+    <section class="editor-grid">
+        <article class="glass-panel editor-panel fade-up">
+            <div class="editor-header">
+                <p class="hero-kicker" th:text="${postData.id != null} ? 'Refine your draft' : 'New story'"></p>
+                <h1 class="editor-title" th:text="${postData.id != null} ? 'Edit Blog Post' : 'Create Blog Post'"></h1>
+                <p class="editor-copy">
+                    Keep the title direct, the summary compact, and the main content readable.
+                </p>
+            </div>
+
+            <form th:action="@{/post/save}" th:object="${postData}" method="post">
+                <input type="hidden" th:field="*{id}">
+
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           th:field="*{title}"
+                           placeholder="Enter blog title"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Short Description</label>
+                    <input type="text"
+                           class="form-control"
+                           th:field="*{description}"
+                           placeholder="Enter short description"
+                           required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Content</label>
+                    <textarea id="editor"
+                              class="form-control"
+                              th:field="*{content}"
+                              rows="20"></textarea>
+                </div>
+
+                <button type="submit" class="btn-purple">
+                    <span th:text="${postData.id != null} ? 'Update Blog' : 'Publish Blog'"></span>
+                </button>
+            </form>
+        </article>
+
+        <aside class="info-stack fade-up delay-1">
+            <div class="glass-panel info-tile">
+                <span class="info-tile__label">Writing Guidance</span>
+                <span class="info-tile__value">Lead with clarity</span>
+                <p class="metric-copy">Use the short description as the fast summary readers see before opening the full article.</p>
+            </div>
+
+            <div class="glass-panel info-tile">
+                <span class="info-tile__label">Editor Flow</span>
+                <span class="info-tile__value">Draft, revise, publish</span>
+                <p class="metric-copy">This page is shared for both new posts and editing existing content to keep the workflow predictable.</p>
+            </div>
+        </aside>
+    </section>
+</main>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            toolbar: [
+                'heading', '|',
+                'bold', 'italic', 'link',
+                'bulletedList', 'numberedList',
+                '|', 'blockQuote', 'insertTable',
+                '|', 'undo', 'redo'
+            ]
+        })
+        .catch(error => console.error(error));
+</script>
+
+</body>
+</html>

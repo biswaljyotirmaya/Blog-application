@@ -1,0 +1,21 @@
+<div th:fragment="navbar" class="topbar">
+    <div class="topbar__inner">
+        <a class="brand-mark" th:href="@{/}">
+            <span class="brand-mark__icon">
+                <i class="bi bi-journal-richtext"></i>
+            </span>
+            <span>CreativeBlog</span>
+        </a>
+
+        <div class="nav-actions">
+            <div th:if="${session.loggedInUser == null}" class="nav-actions">
+                <a th:href="@{/login}" class="nav-pill nav-pill--ghost">Login</a>
+                <a th:href="@{/register}" class="nav-pill nav-pill--solid">Register</a>
+            </div>
+
+            <div th:if="${session.loggedInUser != null}" class="nav-actions">
+                <a th:href="@{/logout}" class="nav-pill nav-pill--solid">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>

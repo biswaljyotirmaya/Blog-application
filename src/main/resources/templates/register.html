@@ -2,49 +2,71 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(~{::body})}">
 
-<body class="auth-page">
+<body>
 
-<div class="register-card">
-    
+<main class="page-shell page-auth">
+    <section class="auth-grid">
+        <article class="glass-panel auth-showcase fade-up">
+            <div>
+                <p class="hero-kicker">Join the platform</p>
+                <h1 class="hero-title">Create your author profile.</h1>
+                <p class="auth-copy">
+                    Register once to start publishing, editing, and curating your articles from a single workflow.
+                </p>
 
-    <h3 class="text-center mb-3">
-        <i class="bi bi-person-plus"></i> Create Account
-    </h3>
+                <div class="auth-list">
+                    <div class="auth-list__item">
+                        <span class="auth-list__dot"></span>
+                        <span>Quick author onboarding with a simple registration form.</span>
+                    </div>
+                    <div class="auth-list__item">
+                        <span class="auth-list__dot"></span>
+                        <span>Immediate access to your own dashboard after login.</span>
+                    </div>
+                    <div class="auth-list__item">
+                        <span class="auth-list__dot"></span>
+                        <span>Designed for clean drafting, clear publishing, and easy reading.</span>
+                    </div>
+                </div>
+            </div>
+        </article>
 
-    <form th:action="@{/register}" th:object="${userData}" method="post">
+        <article class="glass-panel auth-card fade-up delay-1">
+            <p class="hero-kicker">New Account</p>
+            <h2 class="editor-title">Register</h2>
+            <p class="form-note mb-4">Fill in your details to start writing.</p>
 
-        <div class="mb-3">
-            <label class="form-label">First Name</label>
-            <input type="text" class="form-control" th:field="*{firstName}" placeholder="Enter first name" required>
-        </div>
+            <form th:action="@{/register}" th:object="${userData}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-control" th:field="*{firstName}" placeholder="Enter first name" required>
+                </div>
 
-        <div class="mb-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" class="form-control" th:field="*{lastName}" placeholder="Enter last name" required>
-        </div>
+                <div class="mb-3">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control" th:field="*{lastName}" placeholder="Enter last name" required>
+                </div>
 
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email" class="form-control" th:field="*{email}" placeholder="Enter email" required>
-        </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" th:field="*{email}" placeholder="Enter email" required>
+                </div>
 
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password" class="form-control" th:field="*{password}" placeholder="Enter password" required>
-        </div>
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" th:field="*{password}" placeholder="Create a password" required>
+                </div>
 
-        <button type="submit" class="btn btn-purple w-100">
-            Register
-        </button>
+                <button type="submit" class="btn-purple w-100">Create Account</button>
+            </form>
 
-    </form>
-
-    <p class="text-center mt-3">
-        Already have an account?
-        <a th:href="@{/login}" style="color:#6a11cb; font-weight:600;">Login</a>
-    </p>
-
-</div>
+            <p class="form-note text-center mt-4 mb-0">
+                Already registered?
+                <a th:href="@{/login}" class="fw-bold text-decoration-none">Login</a>
+            </p>
+        </article>
+    </section>
+</main>
 
 </body>
 </html>

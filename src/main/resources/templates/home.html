@@ -4,61 +4,84 @@
 
 <body>
 
-<!-- 🌐 Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark px-4"
-     style="background: linear-gradient(135deg, #6a11cb, #2575fc);">
+<main class="page-shell">
+    <section class="hero-grid">
+        <article class="glass-panel hero-panel fade-up">
+            <p class="hero-kicker">Editorial space for thoughtful publishing</p>
+            <h1 class="hero-title">Write clearly. Publish beautifully.</h1>
+            <p class="hero-copy">
+                CreativeBlog gives your stories a clean, modern home. Draft posts, keep your publishing workflow tidy,
+                and let readers move through content without friction.
+            </p>
 
-    <a class="navbar-brand fw-bold" href="#">CreativeBlog</a>
+            <div class="hero-actions">
+                <a th:if="${session.loggedInUser == null}" th:href="@{/register}" class="btn-brand">
+                    Start Writing
+                </a>
+                <a th:if="${session.loggedInUser == null}" th:href="@{/login}" class="btn-soft">
+                    Sign In
+                </a>
+                <a th:if="${session.loggedInUser != null}" th:href="@{/dashboard}" class="btn-brand">
+                    Open Dashboard
+                </a>
+                <a th:if="${session.loggedInUser != null}" th:href="@{/post/new}" class="btn-soft">
+                    Create Post
+                </a>
+            </div>
+        </article>
 
-    <div class="ms-auto">
-        <a th:href="@{/login}" class="btn btn-light btn-sm me-2">Login</a>
-        <a th:href="@{/register}" class="btn btn-outline-light btn-sm">Register</a>
-    </div>
-</nav>
-
-<!-- 🎯 Hero Section -->
-<div class="container text-center mt-5">
-    <h1 class="fw-bold text-white">Welcome to Creative Blog 🚀</h1>
-    <p class="text-light">Share your thoughts, ideas and stories with the world</p>
-</div>
-
-<!-- 📝 Blog Posts -->
-<div class="container mt-5">
-
-    <div class="row g-4">
-
-        <!-- 🔁 Loop posts -->
-        <div class="col-md-4" th:each="post : ${posts}">
-
-            <div class="card shadow-sm h-100 border-0">
-
-                <div class="card-body">
-
-                    <h5 class="card-title fw-bold" th:text="${post.title}">Post Title</h5>
-
-                    <p class="card-text text-muted"
-                       th:text="${post.description}">
-                        Short description...
-                    </p>
-
-                    <a th:href="@{/post/{id}(id=${post.id})}"
-                       class="btn btn-purple btn-sm">
-                        Read More
-                    </a>
-
-                </div>
-
-                <div class="card-footer bg-white border-0 text-muted small">
-                    By <span th:text="${post.user.firstName}">Author</span>
-                </div>
-
+        <aside class="hero-metrics fade-up delay-1">
+            <div class="glass-panel metric-card">
+                <span class="metric-label">Reading Experience</span>
+                <span class="metric-value">Clean</span>
+                <p class="metric-copy">Balanced typography, calm spacing, and focused cards keep the feed readable.</p>
             </div>
 
+            <div class="glass-panel metric-card">
+                <span class="metric-label">Author Workflow</span>
+                <span class="metric-value">Fast</span>
+                <p class="metric-copy">Log in, create content, edit existing posts, and manage your library in one place.</p>
+            </div>
+        </aside>
+    </section>
+
+    <section>
+        <div class="section-head fade-up delay-2">
+            <div>
+                <h2 class="section-title">Latest Posts</h2>
+                <p class="section-copy">
+                    Browse the current collection. Each card keeps the summary compact and pushes readers quickly into the full article.
+                </p>
+            </div>
         </div>
 
-    </div>
+        <div th:if="${posts != null and !#lists.isEmpty(posts)}" class="posts-grid">
+            <article class="glass-panel post-card fade-up delay-3" th:each="post : ${posts}">
+                <div class="post-card__meta">
+                    <span class="post-card__badge">Featured</span>
+                    <span th:text="${post.authorName}">Author</span>
+                </div>
 
-</div>
+                <h3 class="post-card__title" th:text="${post.title}">Post Title</h3>
+                <p class="post-card__copy" th:text="${post.description}">
+                    Short description...
+                </p>
+
+                <div class="post-card__footer">
+                    <span class="post-card__author">By <span th:text="${post.authorName}">Author</span></span>
+                    <a th:href="@{/post/{id}(id=${post.id})}" class="btn-soft">Read Post</a>
+                </div>
+            </article>
+        </div>
+
+        <div th:if="${posts == null or #lists.isEmpty(posts)}" class="glass-panel empty-state fade-up delay-3">
+            <h3 class="section-title">No posts yet</h3>
+            <p class="section-copy mx-auto">
+                Publish the first story to start building the feed.
+            </p>
+        </div>
+    </section>
+</main>
 
 </body>
 </html>

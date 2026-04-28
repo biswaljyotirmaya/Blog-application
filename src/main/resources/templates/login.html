@@ -2,48 +2,69 @@
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: layout(~{::body})}">
 
-<body class="auth-page">
+<body>
 
-<div class="register-card">
+<main class="page-shell page-auth">
+    <section class="auth-grid">
+        <article class="glass-panel auth-showcase fade-up">
+            <div>
+                <p class="hero-kicker">Welcome back</p>
+                <h1 class="hero-title">Return to your writing desk.</h1>
+                <p class="auth-copy">
+                    Sign in to manage your posts, publish new content, and keep your blog library organized from one dashboard.
+                </p>
 
-    <h3 class="text-center mb-3">
-        <i class="bi bi-box-arrow-in-right"></i> Login
-    </h3>
+                <div class="auth-list">
+                    <div class="auth-list__item">
+                        <span class="auth-list__dot"></span>
+                        <span>Focused editor for creating and updating posts.</span>
+                    </div>
+                    <div class="auth-list__item">
+                        <span class="auth-list__dot"></span>
+                        <span>Clean dashboard view for managing your published work.</span>
+                    </div>
+                    <div class="auth-list__item">
+                        <span class="auth-list__dot"></span>
+                        <span>Public-facing reading experience with comments and smooth navigation.</span>
+                    </div>
+                </div>
+            </div>
+        </article>
 
-    <form th:action="@{/login}" th:object="${loginData}" method="post">
+        <article class="glass-panel auth-card fade-up delay-1">
+            <p class="hero-kicker">Account Access</p>
+            <h2 class="editor-title">Login</h2>
+            <p class="form-note mb-4">Use your registered credentials to continue.</p>
 
-        <div class="mb-3">
-            <label class="form-label">Email</label>
-            <input type="email"
-                   class="form-control"
-                   th:field="*{email}"
-                   placeholder="Enter your email"
-                   required>
-        </div>
+            <form th:action="@{/login}" th:object="${loginData}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email"
+                           class="form-control"
+                           th:field="*{email}"
+                           placeholder="Enter your email"
+                           required>
+                </div>
 
-        <div class="mb-3">
-            <label class="form-label">Password</label>
-            <input type="password"
-                   class="form-control"
-                   th:field="*{password}"
-                   placeholder="Enter your password"
-                   required>
-        </div>
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password"
+                           class="form-control"
+                           th:field="*{password}"
+                           placeholder="Enter your password"
+                           required>
+                </div>
 
-        <button type="submit" class="btn btn-purple w-100">
-            Login
-        </button>
+                <button type="submit" class="btn-purple w-100">Login</button>
+            </form>
 
-    </form>
-
-    <p class="text-center mt-3">
-        Don't have an account?
-        <a th:href="@{/register}" style="color:#6a11cb; font-weight:600;">
-            Register
-        </a>
-    </p>
-
-</div>
+            <p class="form-note text-center mt-4 mb-0">
+                New here?
+                <a th:href="@{/register}" class="fw-bold text-decoration-none">Create an account</a>
+            </p>
+        </article>
+    </section>
+</main>
 
 </body>
 </html>

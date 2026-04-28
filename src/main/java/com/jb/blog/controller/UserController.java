@@ -56,12 +56,13 @@ public class UserController {
             return "redirect:/login";
         }
         redirectAttributes.addFlashAttribute("success", st.substring("SUCCESS:".length()));
-        return "redirect:/";
+        return "redirect:/dashboard";
     }
 
     @GetMapping("/logout")
-    public void logout(Model model) {
+    public String logout(Model model) {
         session.invalidate();
+        return "redirect:/";
     }
 
 }

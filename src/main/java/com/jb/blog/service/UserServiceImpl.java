@@ -17,7 +17,7 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService {
 
     @Autowired
-    private HttpSession httpSession;
+    private HttpSession session;
 
     @Autowired
     private IUsersRepo userRepo;
@@ -48,7 +48,8 @@ public class UserServiceImpl implements IUserService {
         } else if (!userData.getPassword().equals(loginData.getPassword())) {
             return "ERROR: Passwords don't match";
         }
-        httpSession.setAttribute("userId", userData.getId());
+        userData.setPassword("");
+        session.setAttribute("loggedInUser", userData);
         return "SUCCESS: User logged in successfully";
     }
 

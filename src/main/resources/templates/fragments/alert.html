@@ -1,13 +1,19 @@
-<div th:fragment="alertBox">
-    <div id="alertBox"
+<div th:fragment="alertBox" class="alert-stack">
+    <div id="alertSuccess"
          th:if="${success != null}"
-         class="alert-success"
-         th:text="${success}">
+         class="alert-banner alert-banner--success">
+        <span class="alert-banner__icon">
+            <i class="bi bi-check2-circle"></i>
+        </span>
+        <span th:text="${success}"></span>
     </div>
 
-    <div id="alertBox"
+    <div id="alertError"
          th:if="${error != null}"
-         class="alert-error"
-         th:text="${error}">
+         class="alert-banner alert-banner--error">
+        <span class="alert-banner__icon">
+            <i class="bi bi-exclamation-triangle"></i>
+        </span>
+        <span th:text="${error}"></span>
     </div>
 </div>
