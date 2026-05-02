@@ -16,14 +16,18 @@ import java.util.List;
 @Service
 public class PostServiceImpl implements IPostService {
 
-    @Autowired
-    private IPostsRepo postsRepo;
+    private final IPostsRepo postsRepo;
+
+    private final IUsersRepo usersRepo;
+
+    private final HttpSession httpSession;
 
     @Autowired
-    private IUsersRepo usersRepo;
-
-    @Autowired
-    private HttpSession httpSession;
+    public PostServiceImpl(IPostsRepo postsRepo, IUsersRepo usersRepo, HttpSession httpSession) {
+        this.postsRepo = postsRepo;
+        this.usersRepo = usersRepo;
+        this.httpSession = httpSession;
+    }
 
     @Override
     public String addPost(PostData postData) {
@@ -46,7 +50,7 @@ public class PostServiceImpl implements IPostService {
         List<Post> list = postsRepo.findAll();
 
         if (list.isEmpty()) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<PostData> result = new ArrayList<>();
@@ -80,7 +84,7 @@ public class PostServiceImpl implements IPostService {
         User user = usersRepo.findUserById(id);
 
         if (user == null) {
-            return null;
+            return new ArrayList<>();
         }
 
         List<PostData> result = new ArrayList<>();

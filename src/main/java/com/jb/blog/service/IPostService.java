@@ -6,6 +6,7 @@ import com.jb.blog.entity.User;
 import java.util.List;
 
 public interface IPostService {
+
     public String addPost(PostData post);
 
     public List<PostData> findAllPost();

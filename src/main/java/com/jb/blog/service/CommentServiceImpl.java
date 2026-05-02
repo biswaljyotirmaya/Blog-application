@@ -8,16 +8,21 @@ import com.jb.blog.repo.IPostsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class commentServiceImpl implements ICommentService {
-    @Autowired
-    private ICommentsRepo commentRepo;
+public class CommentServiceImpl implements ICommentService {
+
+
+    private final ICommentsRepo commentRepo;
+
+    private final IPostsRepo postRepo;
 
     @Autowired
-    private IPostsRepo postRepo;
+    public CommentServiceImpl(ICommentsRepo commentRepo, IPostsRepo postRepo) {
+        this.commentRepo = commentRepo;
+        this.postRepo = postRepo;
+    }
 
     public void addComment(Long postId, CommentData data) {
 

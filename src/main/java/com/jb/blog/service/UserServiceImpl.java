@@ -16,11 +16,15 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements IUserService {
 
-    @Autowired
-    private HttpSession session;
+    private final HttpSession session;
+
+    private final IUsersRepo userRepo;
 
     @Autowired
-    private IUsersRepo userRepo;
+    public UserServiceImpl(IUsersRepo userRepo, HttpSession session) {
+        this.userRepo = userRepo;
+        this.session = session;
+    }
 
     @Override
     public String addUser(UserData userData) {
@@ -76,7 +80,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public String updateUser(Long id,UserData userdata) {
+    public String updateUser(Long id, UserData userdata) {
         Optional<User> user = userRepo.findById(id);
         if (user.isEmpty()) return "ERROR: User not found";
         user.get().setFirstName(userdata.getFirstName());

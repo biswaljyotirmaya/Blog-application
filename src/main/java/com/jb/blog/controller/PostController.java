@@ -2,22 +2,20 @@ package com.jb.blog.controller;
 
 import com.jb.blog.DTO.CommentData;
 import com.jb.blog.DTO.PostData;
+import com.jb.blog.constant.Constants;
 import com.jb.blog.entity.Comment;
 import com.jb.blog.entity.Post;
 import com.jb.blog.entity.User;
 import com.jb.blog.repo.IPostsRepo;
 import com.jb.blog.service.ICommentService;
 import com.jb.blog.service.IPostService;
+import com.jb.blog.service.IUserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -25,14 +23,18 @@ import java.util.List;
 @Controller
 public class PostController {
 
-    @Autowired
-    private IPostService postService;
+    private final IPostService postService;
+
+    private final ICommentService commentService;
+
+    private final IPostsRepo iPostsRepo;
 
     @Autowired
-    private ICommentService commentService;
-
-    @Autowired
-    private IPostsRepo iPostsRepo;
+    public PostController(IPostsRepo postsRepo, ICommentService commentService, IUserService userService, IPostService postService) {
+        this.iPostsRepo = postsRepo;
+        this.commentService = commentService;
+        this.postService = postService;
+    }
 
     @GetMapping("/")
     public String home(Model model) {
@@ -43,10 +45,10 @@ public class PostController {
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
+        User user = (User) session.getAttribute(Constants.LOGGED_IN_USER);
 
         if (user == null) {
-            return "redirect:/login";
+            return Constants.REDIRECT_LOGIN;
         }
 
         List<PostData> posts = postService.findAllPostByUser(user.getId());
@@ -57,10 +59,10 @@ public class PostController {
 
     @GetMapping("/post/new")
     public String createPostPage(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("loggedInUser");
+        User user = (User) session.getAttribute(Constants.LOGGED_IN_USER);
 
         if (user == null) {
-            return "redirect:/login";
+            return Constants.REDIRECT_LOGIN;
         }
 
         model.addAttribute("postData", new PostData());
@@ -86,31 +88,29 @@ public class PostController {
     }
 
     @PostMapping("/post/comment")
-    public String addComment(@ModelAttribute CommentData commentData,
-                             @RequestParam Long postId,
-                             RedirectAttributes redirectAttributes) {
+    public String addComment(@ModelAttribute CommentData commentData, @RequestParam Long postId, RedirectAttributes redirectAttributes) {
         commentService.addComment(postId, commentData);
-        redirectAttributes.addFlashAttribute("success", "Comment added successfully");
+        redirectAttributes.addFlashAttribute(Constants.SUCCESS, "Comment added successfully");
 
         return "redirect:/post/" + postId;
     }
 
     @GetMapping("/post/edit/{id}")
     public String editPost(@PathVariable Long id, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("loggedInUser");
+        User user = (User) session.getAttribute(Constants.LOGGED_IN_USER);
 
         if (user == null) {
-            return "redirect:/login";
+            return Constants.REDIRECT_LOGIN;
         }
 
         Post post = iPostsRepo.findById(id).orElse(null);
 
         if (post == null) {
-            return "redirect:/dashboard";
+            return Constants.REDIRECT_DASHBOARD;
         }
 
         if (!post.getUser().getId().equals(user.getId())) {
-            return "redirect:/dashboard";
+            return Constants.REDIRECT_DASHBOARD;
         }
 
         PostData dto = new PostData();
@@ -123,44 +123,40 @@ public class PostController {
     }
 
     @PostMapping("/post/save")
-    public String savePost(@ModelAttribute PostData postData,
-                           HttpSession session,
-                           RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("loggedInUser");
+    public String savePost(@ModelAttribute PostData postData, HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute(Constants.LOGGED_IN_USER);
 
         if (user == null) {
-            return "redirect:/login";
+            return Constants.REDIRECT_LOGIN;
         }
 
         if (postData.getId() != null) {
             postService.updatePost(postData, user);
-            redirectAttributes.addFlashAttribute("success", "Blog updated successfully");
+            redirectAttributes.addFlashAttribute(Constants.SUCCESS, "Blog updated successfully");
         } else {
             postService.addPost(postData);
-            redirectAttributes.addFlashAttribute("success", "Blog created successfully");
+            redirectAttributes.addFlashAttribute(Constants.SUCCESS, "Blog created successfully");
         }
 
-        return "redirect:/dashboard";
+        return Constants.REDIRECT_DASHBOARD;
     }
 
     @PostMapping("/post/delete/{id}")
-    public String deletePost(@PathVariable Long id,
-                             HttpSession session,
-                             RedirectAttributes redirectAttributes) {
-        User user = (User) session.getAttribute("loggedInUser");
+    public String deletePost(@PathVariable Long id, HttpSession session, RedirectAttributes redirectAttributes) {
+        User user = (User) session.getAttribute(Constants.LOGGED_IN_USER);
 
         if (user == null) {
-            return "redirect:/login";
+            return Constants.REDIRECT_LOGIN;
         }
 
         boolean deleted = postService.deletePost(id, user);
 
         if (deleted) {
-            redirectAttributes.addFlashAttribute("success", "Blog deleted successfully");
+            redirectAttributes.addFlashAttribute(Constants.SUCCESS, "Blog deleted successfully");
         } else {
-            redirectAttributes.addFlashAttribute("error", "You are not allowed to delete this post");
+            redirectAttributes.addFlashAttribute(Constants.ERROR, "You are not allowed to delete this post");
         }
 
-        return "redirect:/dashboard";
+        return Constants.REDIRECT_DASHBOARD;
     }
 }

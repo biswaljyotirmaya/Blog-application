@@ -1,9 +1,7 @@
 package com.jb.blog.DTO;
 
-import jakarta.persistence.Lob;
 import lombok.Data;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data

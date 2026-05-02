@@ -2,8 +2,6 @@ package com.jb.blog.service;
 
 import com.jb.blog.DTO.LoginData;
 import com.jb.blog.DTO.UserData;
-import com.jb.blog.entity.Post;
-import com.jb.blog.entity.User;
 
 import java.util.List;
 

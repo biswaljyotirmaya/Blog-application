@@ -2,6 +2,7 @@ package com.jb.blog.controller;
 
 import com.jb.blog.DTO.LoginData;
 import com.jb.blog.DTO.UserData;
+import com.jb.blog.constant.Constants;
 import com.jb.blog.service.IUserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,16 +12,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-
 @Controller
 public class UserController {
 
-    @Autowired
-    private IUserService userService;
+    private final IUserService userService;
+
+    private final HttpSession session;
 
     @Autowired
-    private HttpSession session;
+    public UserController(IUserService userService, HttpSession session) {
+        this.userService = userService;
+        this.session = session;
+    }
 
     @GetMapping("/register")
     public String registerUser(Model model) {
@@ -32,12 +35,12 @@ public class UserController {
     public String addUser(RedirectAttributes redirectAttributes, UserData userData) {
         System.out.println(userData);
         String res = userService.addUser(userData);
-        if (res.startsWith("ERROR:")) {
-            redirectAttributes.addFlashAttribute("error", res.substring("ERROR:".length()));
+        if (res.startsWith(Constants.ERROR_START)) {
+            redirectAttributes.addFlashAttribute("error", res.substring(Constants.ERROR_START.length()));
             return "redirect:/register";
         } else {
-            redirectAttributes.addFlashAttribute("success", res.substring("SUCCESS:".length()));
-            return "redirect:/";
+            redirectAttributes.addFlashAttribute("success", res.substring(Constants.SUCCESS_START.length()));
+            return Constants.REDIRECT_HOME;
         }
     }
 
@@ -51,18 +54,18 @@ public class UserController {
     public String handleLogin(RedirectAttributes redirectAttributes, LoginData loginData) {
         System.out.println(loginData);
         String st = userService.login(loginData);
-        if (st.startsWith("ERROR:")) {
-            redirectAttributes.addFlashAttribute("error", st.substring("ERROR:".length()));
-            return "redirect:/login";
+        if (st.startsWith(Constants.ERROR_START)) {
+            redirectAttributes.addFlashAttribute("error", st.substring(Constants.ERROR_START.length()));
+            return Constants.REDIRECT_LOGIN;
         }
-        redirectAttributes.addFlashAttribute("success", st.substring("SUCCESS:".length()));
-        return "redirect:/dashboard";
+        redirectAttributes.addFlashAttribute("success", st.substring(Constants.SUCCESS_START.length()));
+        return Constants.REDIRECT_DASHBOARD;
     }
 
     @GetMapping("/logout")
     public String logout(Model model) {
         session.invalidate();
-        return "redirect:/";
+        return Constants.REDIRECT_HOME;
     }
 
 }
